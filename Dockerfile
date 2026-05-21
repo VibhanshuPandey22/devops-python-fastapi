@@ -14,6 +14,7 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
+# Copy only the necessary files from the builder stage like the installed python packages in lib/python_version, executable binaries in bin and the application code in /app
 COPY --from=builder /usr/local/lib/python3.12 /usr/local/lib/python3.12
 COPY --from=builder /usr/local/bin /usr/local/bin
 
