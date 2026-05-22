@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout'){
             steps {
-                git 'git@github.com:VibhanshuPandey22/devops-python-fastapi.git'
+                git 'https://github.com/VibhanshuPandey22/devops-python-fastapi.git'
             }
         }
 
