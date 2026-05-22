@@ -11,6 +11,7 @@ pipeline {
         stage('Install Dependencies') {
             agent { docker { image 'python:3.12-slim' } }
             steps {
+                sh 'python3 -m pip install --upgrade pip'
                 sh 'python3 -m pip install -r requirements.txt'
             }
         }
@@ -18,6 +19,7 @@ pipeline {
         stage('Run Tests') {
             agent { docker { image 'python:3.12-slim' } }
             steps {
+                sh 'python3 -m pip install tox'
                 sh 'tox'
             }
         }
