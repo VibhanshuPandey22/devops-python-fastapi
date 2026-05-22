@@ -1,3 +1,4 @@
+//ASK SIR WHY THIS DID NOT WORK
 // pipeline {
 //     agent any
 
@@ -32,6 +33,7 @@
 //     }
 // }
 
+// WORKING VERSION - PRE INSTALLED DOCKER AND FULL PYTHON IN THE JENKINS CONTAINER
 pipeline {
     agent any
 
@@ -45,6 +47,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
+                // creating venv is not necessary here as we have only one project and we are installing dependencies in a container, but it is a good practice to use venv for python projects, so I am using it here
                 sh '''
                     python3 -m venv venv
                     . venv/bin/activate
@@ -63,7 +66,7 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build Docker Image') { // this happens only because we attaced the socket to the container, otherwise it would have failed with permission error
             steps {
                 sh 'docker build -t fastapi-devops .'
             }
