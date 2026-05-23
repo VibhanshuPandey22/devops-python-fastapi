@@ -81,7 +81,9 @@ pipeline {
     environment {
         AWS_REGION = 'ap-south-1'
         ECR_REPO = '767289848364.dkr.ecr.ap-south-1.amazonaws.com/devops-fastapi'
+        ECR_URI = '767289848364.dkr.ecr.ap-south-1.amazonaws.com'
         IMAGE_TAG = 'latest'
+        EC2_PUBLIC_IP = '13.126.35.40' // REPLACE WITH YOUR EC2 PUBLIC IP
     }
 
     stages {
@@ -129,7 +131,7 @@ pipeline {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-credentials'
+                    credentialsId: 'accesskeysforjenkins'
                 ]]) {
 
                     sh '''
@@ -141,6 +143,7 @@ pipeline {
                 }
             }
         }
+        
 
         stage('Deploy To EC2') {
             steps {
@@ -148,10 +151,10 @@ pipeline {
                 sshagent(credentials: ['ec2-ssh-key']) {
 
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@EC2_PUBLIC_IP << EOF
+                    ssh -o StrictHostKeyChecking=no ubuntu@$EC2_PUBLIC_IP << EOF
 
                     aws ecr get-login-password --region ap-south-1 | \
-                    docker login --username AWS --password-stdin YOUR_ECR_URI
+                    docker login --username AWS --password-stdin $ECR_URI
 
                     docker stop fastapi-app || true
                     docker rm fastapi-app || true
